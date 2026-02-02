@@ -1,8 +1,11 @@
 import pg from 'pg';
 import { CONFIG } from './config.js';
-import { DatabaseProvider, Member } from './types.js';
+import { DatabaseProvider } from './types.js';
 import { PostgresDatabase } from './db-postgres.js';
 import { JsonDatabase } from './db-json.js';
+
+// Re-export Member type for backward compatibility
+export type { Member } from './types.js';
 
 const { Pool } = pg;
 
@@ -40,8 +43,6 @@ export async function initDb() {
     CREATE INDEX IF NOT EXISTS idx_joined_at ON members(joined_at);
   `);
 }
-
-export { Member };
 
 export async function addMember(
   address: string,
