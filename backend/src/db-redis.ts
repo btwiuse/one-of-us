@@ -79,8 +79,9 @@ export const RedisDatabase: Database = {
 
   async getAllMembers(page = 0, pageSize = 100): Promise<Member[]> {
     // Get addresses from sorted set in reverse order (newest first)
-    const offset = page * pageSize;
-    const addresses = await client.zRange('members:list', offset, offset + pageSize - 1, {
+    const start = page * pageSize;
+    const end = start + pageSize - 1;
+    const addresses = await client.zRange('members:list', start, end, {
       REV: true,
     });
 

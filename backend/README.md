@@ -248,7 +248,7 @@ CREATE TABLE members (
 
 Redis uses the following key structure:
 
-- `members:{address}` - Hash containing member data (id, address, tx_hash, joined_at)
+- `members:{address}` - JSON string containing member data (id, address, tx_hash, joined_at)
 - `members:list` - Sorted set for ordering by joined_at timestamp (score = timestamp, value = address)
 - `members:counter` - Counter for generating sequential member IDs
 
