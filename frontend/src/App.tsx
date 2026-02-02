@@ -106,7 +106,7 @@ function App() {
         <div className="title-container">
           <h2 className="subtitle">Join the movement</h2>
           <h1 className="main-title">
-            <a href={import.meta.env.BASE_URL} className="title-link">
+            <a href="/one-of-us" className="title-link">
               <span className="one">ONE</span>
               <span className="of">OF</span>
               <span className="us">US</span>
