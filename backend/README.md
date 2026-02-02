@@ -13,11 +13,37 @@ npm run dev
 
 ## Environment Variables
 
-| Variable       | Description                  | Required |
-| -------------- | ---------------------------- | -------- |
-| `PROGRAM_ID`   | Vara program address         | Yes      |
-| `DATABASE_URL` | PostgreSQL connection string | Yes      |
-| `BACKEND_PORT` | Server port (default: 3001)  | No       |
+| Variable       | Description                                      | Required |
+| -------------- | ------------------------------------------------ | -------- |
+| `PROGRAM_ID`   | Vara program address                             | Yes      |
+| `DB_TYPE`      | Database type: `postgres` or `redis`             | No       |
+| `DATABASE_URL` | PostgreSQL connection string                     | If postgres |
+| `REDIS_URL`    | Redis connection string (default: redis://localhost:6379) | If redis |
+| `BACKEND_PORT` | Server port (default: 3001)                      | No       |
+
+### Database Options
+
+The backend supports two database providers for local development:
+
+#### PostgreSQL (Default)
+
+```bash
+DB_TYPE=postgres
+DATABASE_URL=postgres://user:password@localhost:5432/one_of_us
+```
+
+#### Redis
+
+```bash
+DB_TYPE=redis
+REDIS_URL=redis://localhost:6379
+```
+
+To quickly start Redis locally using Docker:
+
+```bash
+docker run -d -p 6379:6379 redis:7-alpine
+```
 
 ## API Endpoints
 
@@ -205,6 +231,8 @@ Update the transaction hash for a member after their transaction is finalized.
 
 ## Database Schema
 
+### PostgreSQL
+
 PostgreSQL database with a single `members` table:
 
 ```sql
@@ -215,6 +243,14 @@ CREATE TABLE members (
   joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 ```
+
+### Redis
+
+Redis uses the following key structure:
+
+- `members:{address}` - Hash containing member data (id, address, tx_hash, joined_at)
+- `members:list` - Sorted set for ordering by joined_at timestamp (score = timestamp, value = address)
+- `members:counter` - Counter for generating sequential member IDs
 
 ## Flow
 
