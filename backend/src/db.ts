@@ -62,6 +62,8 @@ class SqliteAdapter implements DbAdapter {
 
   async query(sql: string, params: any[] = []): Promise<{ rows: any[]; rowCount?: number }> {
     // Convert PostgreSQL placeholder style ($1, $2) to SQLite style (?, ?)
+    // Note: This assumes placeholders are used in sequential order ($1, $2, $3, etc.)
+    // If placeholders are out of order (e.g., $2, $1), the conversion will not work correctly
     const sqliteSql = sql.replace(/\$(\d+)/g, '?');
     const sqlUpper = sql.trim().toUpperCase();
     
@@ -69,12 +71,14 @@ class SqliteAdapter implements DbAdapter {
       const stmt = this.db.prepare(sqliteSql);
       const rows = stmt.all(params);
       return { rows, rowCount: rows.length };
-    } else if (sqlUpper.startsWith('INSERT') || sqlUpper.startsWith('UPDATE')) {
+    } else if (sqlUpper.startsWith('INSERT') || 
+               sqlUpper.startsWith('UPDATE') || 
+               sqlUpper.startsWith('DELETE')) {
       const stmt = this.db.prepare(sqliteSql);
       const info = stmt.run(params);
       return { rows: [], rowCount: info.changes };
     } else {
-      // For other queries (like CREATE TABLE)
+      // For other queries (like CREATE TABLE, CREATE INDEX, etc.)
       this.db.exec(sqliteSql);
       return { rows: [], rowCount: 0 };
     }
