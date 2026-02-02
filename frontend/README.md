@@ -25,10 +25,13 @@ npm install
 
 ### Environment Variables
 
-Copy `.env.example` to `.env.local`:
+The application comes with a default `.env` file that contains testnet configuration values. These should work out of the box for development.
+
+For production or custom deployments, you can override these by creating a `.env.local` file:
 
 ```bash
 cp .env.example .env.local
+# Edit .env.local with your custom values
 ```
 
 Required environment variables:
@@ -47,7 +50,9 @@ NEXT_PUBLIC_VARA_ETH_HTTP=https://hoodi-reth-rpc.gear-tech.io
 npm run dev
 ```
 
-Open [http://localhost:3000/one-of-us](http://localhost:3000/one-of-us) in your browser.
+**Important:** The application is accessible at [http://localhost:3000/one-of-us](http://localhost:3000/one-of-us) (note the `/one-of-us` path).
+
+The basePath is configured to `/one-of-us` to match the deployment structure.
 
 ### Production Build
 
