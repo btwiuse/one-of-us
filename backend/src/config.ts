@@ -17,4 +17,5 @@ export const CONFIG = {
   PORT: parseInt(process.env.BACKEND_PORT || '3001'),
   PROGRAM_ID: required('PROGRAM_ID') as `0x${string}`,
   DATABASE_URL: required('DATABASE_URL'),
+  DATABASE_TYPE: (process.env.DATABASE_TYPE || 'postgres') as 'postgres' | 'sqlite',
 } as const;
