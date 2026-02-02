@@ -16,5 +16,6 @@ const required = (key: string): string => {
 export const CONFIG = {
   PORT: parseInt(process.env.BACKEND_PORT || '3001'),
   PROGRAM_ID: required('PROGRAM_ID') as `0x${string}`,
-  DATABASE_URL: required('DATABASE_URL'),
+  DATABASE_PROVIDER: process.env.DATABASE_PROVIDER || 'postgres',
+  DATABASE_URL: process.env.DATABASE_URL || '',
 } as const;

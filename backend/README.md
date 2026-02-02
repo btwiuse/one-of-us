@@ -13,11 +13,30 @@ npm run dev
 
 ## Environment Variables
 
-| Variable       | Description                  | Required |
-| -------------- | ---------------------------- | -------- |
-| `PROGRAM_ID`   | Vara program address         | Yes      |
-| `DATABASE_URL` | PostgreSQL connection string | Yes      |
-| `BACKEND_PORT` | Server port (default: 3001)  | No       |
+| Variable           | Description                            | Required                |
+| ------------------ | -------------------------------------- | ----------------------- |
+| `PROGRAM_ID`       | Vara program address                   | Yes                     |
+| `DATABASE_PROVIDER`| Database provider: `postgres` or `json`| No (default: postgres)  |
+| `DATABASE_URL`     | PostgreSQL connection string           | Yes (for postgres only) |
+| `BACKEND_PORT`     | Server port (default: 3001)            | No                      |
+
+### Database Providers
+
+The backend supports two database providers:
+
+**PostgreSQL (Production):**
+```bash
+DATABASE_PROVIDER=postgres
+DATABASE_URL=postgres://user:password@localhost:5432/one_of_us
+```
+
+**JSON Files (Local Development):**
+```bash
+DATABASE_PROVIDER=json
+# DATABASE_URL is not required for JSON provider
+```
+
+The JSON provider stores data in `backend/data/members.json`, making it perfect for quick local development without needing to set up PostgreSQL.
 
 ## API Endpoints
 

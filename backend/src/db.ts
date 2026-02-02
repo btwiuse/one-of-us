@@ -1,8 +1,31 @@
 import pg from 'pg';
 import { CONFIG } from './config.js';
+import { DatabaseProvider } from './types.js';
+import { PostgresDatabase } from './db-postgres.js';
+import { JsonDatabase } from './db-json.js';
+
+// Re-export Member type for backward compatibility
+export type { Member } from './types.js';
 
 const { Pool } = pg;
 
+// Factory function to create database provider based on config
+export function createDatabaseProvider(): DatabaseProvider {
+  const provider = CONFIG.DATABASE_PROVIDER.toLowerCase();
+
+  if (provider === 'json') {
+    return new JsonDatabase();
+  } else if (provider === 'postgres' || provider === 'postgresql') {
+    if (!CONFIG.DATABASE_URL) {
+      throw new Error('DATABASE_URL is required for PostgreSQL provider');
+    }
+    return new PostgresDatabase();
+  } else {
+    throw new Error(`Unknown database provider: ${provider}`);
+  }
+}
+
+// Legacy exports for backward compatibility
 const pool = new Pool({
   connectionString: CONFIG.DATABASE_URL,
 });
@@ -19,13 +42,6 @@ export async function initDb() {
     CREATE INDEX IF NOT EXISTS idx_address ON members(address);
     CREATE INDEX IF NOT EXISTS idx_joined_at ON members(joined_at);
   `);
-}
-
-export interface Member {
-  id: number;
-  address: string;
-  tx_hash: string | null;
-  joined_at: string;
 }
 
 export async function addMember(
