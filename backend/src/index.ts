@@ -2,9 +2,10 @@ import express from 'express';
 import cors from 'cors';
 import { CONFIG } from './config.js';
 import { createDatabaseProvider } from './db.js';
+import type { DatabaseProvider } from './types.js';
 
 const app = express();
-const db = createDatabaseProvider();
+let db: DatabaseProvider;
 
 app.use(cors());
 app.use(express.json());
@@ -111,15 +112,21 @@ app.put('/api/members/:address/txHash', async (req, res) => {
 });
 
 async function start() {
-  await db.init();
-  const count = await db.getMemberCount();
-  
-  app.listen(CONFIG.PORT, () => {
-    console.log(`🚀 Backend running on http://localhost:${CONFIG.PORT}`);
-    console.log(`   Database Provider: ${CONFIG.DATABASE_PROVIDER}`);
-    console.log(`   Program ID: ${CONFIG.PROGRAM_ID}`);
-    console.log(`   Members: ${count}`);
-  });
+  try {
+    db = createDatabaseProvider();
+    await db.init();
+    const count = await db.getMemberCount();
+    
+    app.listen(CONFIG.PORT, () => {
+      console.log(`🚀 Backend running on http://localhost:${CONFIG.PORT}`);
+      console.log(`   Database Provider: ${CONFIG.DATABASE_PROVIDER}`);
+      console.log(`   Program ID: ${CONFIG.PROGRAM_ID}`);
+      console.log(`   Members: ${count}`);
+    });
+  } catch (error) {
+    console.error('Failed to start server:', error);
+    process.exit(1);
+  }
 }
 
-start().catch(console.error);
+start();
