@@ -115,6 +115,7 @@ async function start() {
   
   app.listen(CONFIG.PORT, () => {
     console.log(`🚀 Backend running on http://localhost:${CONFIG.PORT}`);
+    console.log(`   Database: ${CONFIG.DB_TYPE}`);
     console.log(`   Program ID: ${CONFIG.PROGRAM_ID}`);
     console.log(`   Members: ${count}`);
   });
