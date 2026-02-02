@@ -13,11 +13,30 @@ npm run dev
 
 ## Environment Variables
 
-| Variable       | Description                  | Required |
-| -------------- | ---------------------------- | -------- |
-| `PROGRAM_ID`   | Vara program address         | Yes      |
-| `DATABASE_URL` | PostgreSQL connection string | Yes      |
-| `BACKEND_PORT` | Server port (default: 3001)  | No       |
+| Variable        | Description                                      | Required |
+| --------------- | ------------------------------------------------ | -------- |
+| `PROGRAM_ID`    | Vara program address                             | Yes      |
+| `DATABASE_TYPE` | Database type: `postgres` or `sqlite` (default: `postgres`) | No       |
+| `DATABASE_URL`  | Database connection string or file path          | Yes      |
+| `BACKEND_PORT`  | Server port (default: 3001)                      | No       |
+
+### Database Configuration
+
+#### PostgreSQL (Production)
+
+```bash
+DATABASE_TYPE=postgres
+DATABASE_URL=postgres://user:password@localhost:5432/one_of_us
+```
+
+#### SQLite (Local Development)
+
+```bash
+DATABASE_TYPE=sqlite
+DATABASE_URL=./data/members.db
+```
+
+SQLite is recommended for local development as it requires no additional setup. The database file will be automatically created when the server starts.
 
 ## API Endpoints
 
@@ -205,14 +224,25 @@ Update the transaction hash for a member after their transaction is finalized.
 
 ## Database Schema
 
-PostgreSQL database with a single `members` table:
+The backend supports both PostgreSQL and SQLite databases with a single `members` table:
 
+**PostgreSQL:**
 ```sql
 CREATE TABLE members (
   id SERIAL PRIMARY KEY,
   address TEXT UNIQUE NOT NULL,
   tx_hash TEXT,
   joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+**SQLite:**
+```sql
+CREATE TABLE members (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  address TEXT UNIQUE NOT NULL,
+  tx_hash TEXT,
+  joined_at TEXT DEFAULT (datetime('now'))
 );
 ```
 
