@@ -7,7 +7,6 @@
     "start": "tsx src/index.ts"
   },
   "dependencies": {
-    "@types/better-sqlite3": "^7.6.13",
     "better-sqlite3": "^12.6.2",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
@@ -15,6 +14,7 @@
     "pg": "^8.13.1"
   },
   "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/node": "^22.10.2",

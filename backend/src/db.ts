@@ -63,15 +63,15 @@ class SqliteAdapter implements DbAdapter {
   async query(sql: string, params: any[] = []): Promise<{ rows: any[]; rowCount?: number }> {
     // Convert PostgreSQL placeholder style ($1, $2) to SQLite style (?, ?)
     const sqliteSql = sql.replace(/\$(\d+)/g, '?');
+    const sqlUpper = sql.trim().toUpperCase();
     
-    if (sql.trim().toUpperCase().startsWith('SELECT')) {
+    if (sqlUpper.startsWith('SELECT')) {
       const stmt = this.db.prepare(sqliteSql);
-      const rows = stmt.all(...params);
+      const rows = stmt.all(params);
       return { rows, rowCount: rows.length };
-    } else if (sql.trim().toUpperCase().startsWith('INSERT') || 
-               sql.trim().toUpperCase().startsWith('UPDATE')) {
+    } else if (sqlUpper.startsWith('INSERT') || sqlUpper.startsWith('UPDATE')) {
       const stmt = this.db.prepare(sqliteSql);
-      const info = stmt.run(...params);
+      const info = stmt.run(params);
       return { rows: [], rowCount: info.changes };
     } else {
       // For other queries (like CREATE TABLE)
