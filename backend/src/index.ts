@@ -1,9 +1,10 @@
 import express from 'express';
 import cors from 'cors';
 import { CONFIG } from './config.js';
-import { initDb, addMember, getMember, getAllMembers, getMemberCount, updateMemberTxHash } from './db.js';
+import { createDatabaseProvider } from './db.js';
 
 const app = express();
+const db = createDatabaseProvider();
 
 app.use(cors());
 app.use(express.json());
@@ -14,7 +15,7 @@ app.get('/health', (_req, res) => {
 
 app.get('/api/members/count', async (_req, res) => {
   try {
-    const count = await getMemberCount();
+    const count = await db.getMemberCount();
     res.json({ count });
   } catch (err: any) {
     res.status(500).json({ error: err.message });
@@ -24,7 +25,7 @@ app.get('/api/members/count', async (_req, res) => {
 app.get('/api/members/:address', async (req, res) => {
   try {
     const { address } = req.params;
-    const member = await getMember(address);
+    const member = await db.getMember(address);
 
     if (member) {
       res.json({ isMember: true, member });
@@ -44,8 +45,8 @@ app.get('/api/members', async (req, res) => {
       500
     );
 
-    const members = await getAllMembers(page, pageSize);
-    const total = await getMemberCount();
+    const members = await db.getAllMembers(page, pageSize);
+    const total = await db.getMemberCount();
 
     res.json({
       members,
@@ -67,8 +68,8 @@ app.post('/api/members', async (req, res) => {
       return res.status(400).json({ error: 'Address is required' });
     }
 
-    const added = await addMember(address, txHash);
-    const count = await getMemberCount();
+    const added = await db.addMember(address, txHash);
+    const count = await db.getMemberCount();
 
     if (added) {
       res.status(201).json({
@@ -97,7 +98,7 @@ app.put('/api/members/:address/txHash', async (req, res) => {
       return res.status(400).json({ error: 'txHash is required' });
     }
 
-    const updated = await updateMemberTxHash(address, txHash);
+    const updated = await db.updateMemberTxHash(address, txHash);
 
     if (updated) {
       res.json({ success: true });
@@ -110,11 +111,12 @@ app.put('/api/members/:address/txHash', async (req, res) => {
 });
 
 async function start() {
-  await initDb();
-  const count = await getMemberCount();
+  await db.init();
+  const count = await db.getMemberCount();
   
   app.listen(CONFIG.PORT, () => {
     console.log(`🚀 Backend running on http://localhost:${CONFIG.PORT}`);
+    console.log(`   Database Provider: ${CONFIG.DATABASE_PROVIDER}`);
     console.log(`   Program ID: ${CONFIG.PROGRAM_ID}`);
     console.log(`   Members: ${count}`);
   });
