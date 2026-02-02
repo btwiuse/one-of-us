@@ -3,6 +3,12 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   basePath: '/one-of-us',
   webpack: (config, { isServer }) => {
+    // Add raw loader for .idl files
+    config.module.rules.push({
+      test: /\.idl$/,
+      type: 'asset/source',
+    });
+
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,

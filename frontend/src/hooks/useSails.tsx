@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Sails } from 'sails-js';
 import { SailsIdlParser } from 'sails-js-parser';
-import idlContent from '../one_of_us.idl?raw';
+import idlContent from '../one_of_us.idl';
 
 export function useSails() {
   const [sails, setSails] = useState<Sails | null>(null);
