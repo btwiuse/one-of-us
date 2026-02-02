@@ -1,5 +1,23 @@
 # One of Us — Deployment Scripts
 
+## Frontend Application
+
+The frontend is a Next.js application with integrated API routes backed by SQLite database.
+
+### Quick Start
+
+```bash
+cd frontend
+npm install
+cp .env.example .env.local
+# Edit .env.local with your configuration
+npm run dev
+```
+
+Open [http://localhost:3000/one-of-us](http://localhost:3000/one-of-us) in your browser.
+
+For detailed documentation, see [frontend/README.md](./frontend/README.md).
+
 ## Build
 
 From project root:

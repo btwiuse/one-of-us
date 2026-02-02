@@ -1,5 +1,6 @@
 import Database from 'better-sqlite3';
 import { join } from 'path';
+import { mkdirSync, existsSync } from 'fs';
 
 let db: Database.Database | null = null;
 
@@ -8,7 +9,6 @@ function getDb(): Database.Database {
     const dbPath = process.env.DATABASE_PATH || join(process.cwd(), 'data', 'members.db');
     
     // Ensure data directory exists
-    const { mkdirSync, existsSync } = require('fs');
     const dbDir = join(process.cwd(), 'data');
     if (!existsSync(dbDir)) {
       mkdirSync(dbDir, { recursive: true });
